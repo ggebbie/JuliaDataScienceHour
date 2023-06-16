@@ -36,9 +36,6 @@ using PythonCall, RDatasets
 # ╔═╡ f682b6d6-91c5-4e33-a1af-0bf03923a099
 md""" # Starting points """
 
-# ╔═╡ 8d31d347-2c00-4f6b-91a4-534e69e2888b
-
-
 # ╔═╡ 7d95487a-7354-451e-a18e-3399ead8ccdd
 md""" [Julia Documentation](https://docs.julialang.org/en/v1/) \
 [Best way to install Julia: Juliaup](https://github.com/JuliaLang/juliaup) \
@@ -1724,9 +1721,8 @@ version = "1.4.1+0"
 # ╔═╡ Cell order:
 # ╟─78eaa877-8e8e-4f04-b366-4289be67cb0d
 # ╟─f682b6d6-91c5-4e33-a1af-0bf03923a099
-# ╠═8d31d347-2c00-4f6b-91a4-534e69e2888b
-# ╠═7d95487a-7354-451e-a18e-3399ead8ccdd
-# ╠═d3d07263-6611-4494-84e7-14b2a66acbd2
+# ╟─7d95487a-7354-451e-a18e-3399ead8ccdd
+# ╟─d3d07263-6611-4494-84e7-14b2a66acbd2
 # ╟─677dc83d-f2ea-456f-a1c0-b8d16cebb2d1
 # ╟─0fdebed8-6a56-46e6-91e8-0e6a59c118dc
 # ╠═d54e7fa8-8761-4b7c-a783-73f661069916
@@ -1790,7 +1786,7 @@ version = "1.4.1+0"
 # ╠═b4c7bebe-3847-4294-b288-1c2b6bc884b2
 # ╟─b642781c-5197-444b-869b-83104a238e40
 # ╠═0c36802b-73b3-4af2-80c1-2f3d063cc5ec
-# ╠═79b62b09-0904-47d6-85bc-00c8afa1b58e
+# ╟─79b62b09-0904-47d6-85bc-00c8afa1b58e
 # ╠═2cfcc3f3-cf52-4d50-9d0b-f4fece1795c6
 # ╟─d0aa4978-ccb0-4d94-9c2b-82dbe2b899f0
 # ╠═ad5e580c-276a-4d05-aa85-f0457a9c65e9
