@@ -1,6 +1,9 @@
 # JuliaDataScienceHour
 Julia demo at the WHOI Data Science Hour
 
+Find it at:
+https://github.com/ggebbie/JuliaDataScienceHour
+
 ## First steps
 
 [Julia Documentation](https://docs.julialang.org/en/v1/) \
