@@ -9,6 +9,9 @@ begin
 	using Pluto, PlutoUI,  LinearAlgebra, Statistics, Plots, PlotlyJS
 end
 
+# ╔═╡ f0d15934-dbfb-4a56-9c5c-d6c390a6e93b
+# note: it may be necessary to re-run the notebook to see the proper output (i.e., show commands) on the screen
+
 # ╔═╡ f4c439a8-693c-49c5-8170-ec6d20df8acf
 md"""## Simplify your repetitive tasks"""
 
@@ -28,6 +31,14 @@ Base.:+(a::UncertainValue,b::UncertainValue) = UncertainValue(a.val+b.val,√(a.
 
 # ╔═╡ 1ca1443c-c33a-4921-a438-a15fdee0a48d
 β + β
+
+# ╔═╡ 2b75c0dc-9fff-49fb-9367-2157c0be4da6
+# define multiplication for UncertainValues
+Base.:*(a::UncertainValue, b::UncertainValue) = UncertainValue(a.val + b.val, a.val*b.err + a.err*b.val)
+
+# ╔═╡ 451a405c-e7af-4ad0-a48b-e253ab858c73
+# even simpler, define multiplication with a scalar
+Base.:*(a::Number,b::UncertainValue) = UncertainValue(a*b.val, a* b.err)
 
 # ╔═╡ a5b55897-d457-40d0-be27-71e788cb195b
 # can you make a vector of uncertain things?
@@ -60,17 +71,8 @@ struct Estimate{T}
 	
 end
 
-
 # ╔═╡ aab56a49-e04f-44ce-bfcb-bbd2e9d78a3a
-function Base.show(io::IO, mime::MIME{Symbol("text/plain")}, x::Estimate)
-    summary(io, x); println(io)
-    println(io, "Estimate and 1σ uncertainty")
-    show(io, mime, x.v)
-end
-
-
-# ╔═╡ 30e88675-f039-4471-81eb-3ef639315065
-q = Estimate([1.0,2.0],[1.0 0.2; 0.2 1.0])
+Base.show(io::IO, x::Estimate) = show(io, x.x)
 
 # ╔═╡ 6ebc62d1-de0d-4113-bd6a-2875a711f69b
 """
@@ -82,13 +84,11 @@ q = Estimate([1.0,2.0],[1.0 0.2; 0.2 1.0])
 - `v::Vector{Number}`: central value of estimate
 - `C::Matrix{Number}`: estimate uncertainty matrix
 """
-function getproperty(x::Estimate, d::Symbol)
+function Base.getproperty(x::Estimate, d::Symbol)
     if d === :σ
         return .√diag(x.C)
     elseif d === :x
-        # x.v can be a UnitfulVector, so wrap with Matrix
-        v = x.v
-        return measurement.(v,x.σ) #return x.v .± x.σ
+        return UncertainValue.(x.v,x.σ) #return x.v .± x.σ
     else
         return getfield(x, d)
     end
@@ -98,11 +98,8 @@ end
 # ╔═╡ fb84fa77-c87d-45aa-bbab-683eb679199e
 Base.propertynames(x::Estimate) = (:x, :σ, fieldnames(typeof(x))...)
 
-# ╔═╡ ce5d226b-2b38-42d6-a09b-fbe0f07c26ec
-q.:σ
-
-# ╔═╡ bf8fdd63-d9b9-4bae-a863-27956b92b417
-
+# ╔═╡ ddbeda12-a0bf-48e5-8860-e4964309c706
+q = Estimate([1.0,2.0],[1.0 0.2; 0.2 1.0])
 
 # ╔═╡ 2ef0a7f8-57b6-4ff2-9faa-d71c5e285411
 """    
@@ -114,11 +111,20 @@ Base.:*(F::AbstractMatrix,x::Estimate) = Estimate(F*x.v,F*x.C*transpose(F))
 # ╔═╡ cd8e5936-ff34-4201-b194-8fe017c8f76b
 # Make a custom function for displaying this type of variable 
 # use Julia's "dispatch" system which calls the right method based on variable type
-#Base.show(io::IO,a::UncertainValue) = println(string(a.val)*" ± "*string(a.err))
 Base.show(io::IO,a::UncertainValue) = println(string(a.val) * " ± " * string(a.err))
+
+# ╔═╡ 43c7e2f7-024d-413f-9359-080fabb4cf44
+2.0*β
+
+# ╔═╡ 81e8600f-f3d1-4cad-8cfb-4190d851032a
+F = transpose([2 0;0 1])
+
+# ╔═╡ a070d953-88a8-4c73-8b36-f7a8b7b401f9
+F*q
 
 # ╔═╡ 4b82e6f4-0e1b-464b-8dca-bca3d24db60c
 md"""
+see more in the Julia package BLUEs.jl
 [link to BLUEs](https://github.com/ggebbie/BLUEs.jl)
 """
 
@@ -143,7 +149,7 @@ PlutoUI = "~0.7.51"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.10.2"
+julia_version = "1.10.3"
 manifest_format = "2.0"
 project_hash = "f36e114abd62d5738e81f9a418868746fb840248"
 
@@ -235,7 +241,7 @@ weakdeps = ["Dates", "LinearAlgebra"]
 [[deps.CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
-version = "1.1.0+0"
+version = "1.1.1+0"
 
 [[deps.ConcurrentUtilities]]
 deps = ["Serialization", "Sockets"]
@@ -1367,6 +1373,7 @@ version = "1.4.1+0"
 """
 
 # ╔═╡ Cell order:
+# ╠═f0d15934-dbfb-4a56-9c5c-d6c390a6e93b
 # ╠═78eaa877-8e8e-4f04-b366-4289be67cb0d
 # ╟─f4c439a8-693c-49c5-8170-ec6d20df8acf
 # ╠═b2d0ce0b-597b-4e9f-b4b2-3ecb08f28222
@@ -1374,18 +1381,21 @@ version = "1.4.1+0"
 # ╠═51b1570d-ba69-4b44-9c88-e398282f879e
 # ╠═b9ccac22-b03f-48b4-9ed4-c38a99ba57d2
 # ╠═1ca1443c-c33a-4921-a438-a15fdee0a48d
+# ╠═2b75c0dc-9fff-49fb-9367-2157c0be4da6
+# ╠═451a405c-e7af-4ad0-a48b-e253ab858c73
+# ╠═43c7e2f7-024d-413f-9359-080fabb4cf44
 # ╠═a5b55897-d457-40d0-be27-71e788cb195b
 # ╠═8715a42d-45fd-4a73-9b2c-4f6b1636e1d2
 # ╠═0d1fb8fd-ff2a-4922-a85b-5706c36f2e8c
 # ╠═200707bb-9feb-444b-a03b-edc85c55459a
 # ╠═5c72fb72-aba2-492d-804e-54065beabd57
 # ╠═aab56a49-e04f-44ce-bfcb-bbd2e9d78a3a
-# ╠═30e88675-f039-4471-81eb-3ef639315065
 # ╠═6ebc62d1-de0d-4113-bd6a-2875a711f69b
 # ╠═fb84fa77-c87d-45aa-bbab-683eb679199e
-# ╠═ce5d226b-2b38-42d6-a09b-fbe0f07c26ec
-# ╠═bf8fdd63-d9b9-4bae-a863-27956b92b417
+# ╠═ddbeda12-a0bf-48e5-8860-e4964309c706
 # ╠═2ef0a7f8-57b6-4ff2-9faa-d71c5e285411
+# ╠═81e8600f-f3d1-4cad-8cfb-4190d851032a
+# ╠═a070d953-88a8-4c73-8b36-f7a8b7b401f9
 # ╟─4b82e6f4-0e1b-464b-8dca-bca3d24db60c
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
